@@ -1,5 +1,11 @@
 @import 'primeicons/primeicons.css';
 
+@font-face {
+  font-family: 'MarkGEOCAPSBold';
+  src: url('/fonts/MarkGEOCAPS-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
 :root{
     --page-color: #E4ECF9;
     --primary-color: #2869CA;

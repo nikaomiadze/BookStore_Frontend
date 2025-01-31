@@ -4,13 +4,18 @@ import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { ButtonModule } from 'primeng/button';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from '../model/User';
+import { Login } from '../model/Login';
+
+
 
 
 @Component({
   selector: 'app-main-page',
-  imports: [CardModule,CommonModule,InputNumberModule,FormsModule,ButtonModule],
+  imports: [CardModule,CommonModule,InputNumberModule,FormsModule,ButtonModule,ReactiveFormsModule],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
@@ -21,7 +26,13 @@ export class MainPageComponent implements OnInit {
   popupVisible = false;
   popupTitle = '';
   popupType: 'login' | 'register' = 'login';
-  constructor(private userService:UserService,private httpclien:HttpClient){}
+  user = new User(); 
+  registerForm!: FormGroup;
+  login: Login = new Login();
+  LoginForm!: FormGroup;
+  loggedin:boolean=false;
+
+  constructor(private userService:UserService,private httpclien:HttpClient,private formbuilder: FormBuilder){}
   
   ngOnInit(): void {
     this.userService.GetBooks().subscribe(data => {
@@ -31,6 +42,16 @@ export class MainPageComponent implements OnInit {
       this.products.forEach(product => {
         this.productValues[product.book_name] = 0;
       });
+    });
+    this.registerForm = this.formbuilder.group({
+      user_name:['',Validators.required],
+      password:['',Validators.required],
+      email:['']
+      
+    });
+    this.LoginForm = this.formbuilder.group({
+      email:['',Validators.required],
+      password:['',Validators.required]    
     });
   }
    openPopup(type: 'login' | 'register'): void {
@@ -42,6 +63,38 @@ export class MainPageComponent implements OnInit {
   closePopup(): void {
     this.popupVisible = false;
   }
+  AddUser(): void {
+    if (this.registerForm.valid) { 
+     Object.assign(this.user, this.registerForm.value)
+      
+      console.log(this.user);
+      this.userService.AddUser(this.user).subscribe({
+        next: res => {
+          alert("Registration successful");
+          this.openPopup('login');
+    },
+   error: err => {
+        console.error('Error during registration:', err);
+        alert("Error during registration");
+      },
+      complete: () => {
+        console.log("User registration process completed");
+      }});
+    } else {
+      alert("Please fill out the form correctly");
+    }
+  }
+  
+authenticate(): void{
+  Object.assign(this.login, this.LoginForm.value)
+
+  this.userService.authenticate(this.login).subscribe(res=>{
+    console.log(res.accessToken);
+    localStorage.setItem("Token",res.accessToken);
+    this.loggedin=true;
+  })
+}
+  
   
 
 }
