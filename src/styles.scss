@@ -1,0 +1,17 @@
+@import 'primeicons/primeicons.css';
+
+:root{
+    --page-color: #E4ECF9;
+    --primary-color: #2869CA;
+    --hover-color: #0a2f68;     
+}
+body {
+    background-color: var(--page-color) ;
+    margin-left: 240px;
+    margin-right: 240px;
+  }
+  @mixin center-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

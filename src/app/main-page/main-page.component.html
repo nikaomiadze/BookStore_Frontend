@@ -1,0 +1,85 @@
+<div class="main-page">
+<div class="header">
+    <div class="title">
+    <h2>მაღაზია</h2>
+    <h2>მომხმარებელი</h2>
+    </div>
+    <div class="nav">
+        <div class="nav-1">
+            <div class="book-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17.15V10C3 9.46667 3.19583 9.01667 3.5875 8.65C3.97917 8.28333 4.44167 8.11667 4.975 8.15C6.29167 8.35 7.54583 8.7375 8.7375 9.3125C9.92917 9.8875 11.0167 10.6333 12 11.55C12.9833 10.6333 14.0708 9.8875 15.2625 9.3125C16.4542 8.7375 17.7083 8.35 19.025 8.15C19.5583 8.11667 20.0208 8.28333 20.4125 8.65C20.8042 9.01667 21 9.46667 21 10V17.15C21 17.6833 20.825 18.1375 20.475 18.5125C20.125 18.8875 19.6833 19.0917 19.15 19.125C18.0833 19.2917 17.05 19.5667 16.05 19.95C15.05 20.3333 14.1167 20.8417 13.25 21.475C13.0667 21.625 12.8708 21.7375 12.6625 21.8125C12.4542 21.8875 12.2333 21.925 12 21.925C11.7667 21.925 11.5458 21.8875 11.3375 21.8125C11.1292 21.7375 10.9333 21.625 10.75 21.475C9.88333 20.8417 8.95 20.3333 7.95 19.95C6.95 19.5667 5.91667 19.2917 4.85 19.125C4.31667 19.0917 3.875 18.8875 3.525 18.5125C3.175 18.1375 3 17.6833 3 17.15ZM12 19.9C13.05 19.1167 14.1667 18.4917 15.35 18.025C16.5333 17.5583 17.75 17.25 19 17.1V10.2C17.7833 10.4167 16.5875 10.8542 15.4125 11.5125C14.2375 12.1708 13.1 13.05 12 14.15C10.9 13.05 9.7625 12.1708 8.5875 11.5125C7.4125 10.8542 6.21667 10.4167 5 10.2V17.1C6.25 17.25 7.46667 17.5583 8.65 18.025C9.83333 18.4917 10.95 19.1167 12 19.9ZM12 9C10.9 9 9.95833 8.60833 9.175 7.825C8.39167 7.04167 8 6.1 8 5C8 3.9 8.39167 2.95833 9.175 2.175C9.95833 1.39167 10.9 1 12 1C13.1 1 14.0417 1.39167 14.825 2.175C15.6083 2.95833 16 3.9 16 5C16 6.1 15.6083 7.04167 14.825 7.825C14.0417 8.60833 13.1 9 12 9ZM12 7C12.55 7 13.0208 6.80417 13.4125 6.4125C13.8042 6.02083 14 5.55 14 5C14 4.45 13.8042 3.97917 13.4125 3.5875C13.0208 3.19583 12.55 3 12 3C11.45 3 10.9792 3.19583 10.5875 3.5875C10.1958 3.97917 10 4.45 10 5C10 5.55 10.1958 6.02083 10.5875 6.4125C10.9792 6.80417 11.45 7 12 7Z" fill="white"/>
+                  </svg>
+            </div>
+            <h1>წიგნების ჩამონათვალი:</h1>
+        </div>
+        <div class="nav-2">
+            <a class="a" (click)="openPopup('login')">შესვლა</a>
+            <a class="a" (click)="openPopup('register')">რეგისტრაცია</a>
+        </div>
+    </div>
+
+</div>
+<div class="books">
+    <p-card *ngFor="let product of products">
+        <ng-template pTemplate="content">
+        <div>
+        <img src="img/book-png-10 1.png" alt="book">
+        </div>
+        <div class="item-info">
+            <p>დასახელება: {{ product.book_name }}</p>
+            <p>ავტორი: {{ product.author }}</p>
+            <p>რაოდენობა: {{ product.quantity }}</p>
+            <p>ფასი: {{ product.price }}</p>
+            <p-inputnumber [(ngModel)]="productValues[product.book_name]" [showButtons]="true" buttonLayout="horizontal" spinnerMode="vertical" inputId="vertical" [min]="0" [max]="product.quantity"
+            [inputStyle]="{ width: '3rem' }">
+                <ng-template #incrementbuttonicon>
+                    <span class="pi pi-plus" [ngClass]="{ 'disabled': productValues[product.book_name] >= product.quantity}"></span>
+                </ng-template>
+                <ng-template #decrementbuttonicon>
+                    <span class="pi pi-minus" [ngClass]="{ 'disabled': productValues[product.book_name] <= 0 }"></span>
+                </ng-template>
+            </p-inputnumber>
+            <p-button [ngClass]="{ 'disabled': productValues[product.book_name] <= 0 }" icon="pi pi-shopping-cart" label="კალათაში დამატება"></p-button>
+        </div>
+        </ng-template>
+    </p-card>
+</div>
+<div *ngIf="popupVisible" class="popup-overlay" (click)="closePopup()">
+    <div class="popup" (click)="$event.stopPropagation()">
+        <div class="popup-header">
+        <h3>{{ popupTitle }}</h3>
+        <button class="close-btn" (click)="closePopup()">
+            <i class="pi pi-times"></i> <!-- Close icon from PrimeIcons -->
+        </button>
+        </div>
+
+        <!-- Content for login pop-up -->
+        <div *ngIf="popupType === 'login'" class="login-popup">
+            <form>
+                <label for="email">ელ-ფოსტა</label>
+                <input type="email" id="email" name="email" required>
+                <label for="password">პაროლი</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">შესვლა</button>
+            </form>
+        </div>
+
+        <!-- Content for registration pop-up -->
+        <div *ngIf="popupType === 'register'" class="register-popup">
+            <form>
+                <label for="username">სახელი</label>
+                <input type="text" id="username" name="username" required>
+                <label for="email">ელ-ფოსტა</label>
+                <input type="email" id="email" name="email" required>
+                <label for="password">პაროლი</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">რეგისტრაცია</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
