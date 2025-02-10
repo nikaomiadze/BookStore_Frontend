@@ -9,6 +9,9 @@ import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../model/User';
 import { Login } from '../model/Login';
+import { Router } from '@angular/router';
+import { Cart } from '../model/Cart';
+import { AuthService } from '../auth.service';
 
 
 
@@ -32,7 +35,8 @@ export class MainPageComponent implements OnInit {
   LoginForm!: FormGroup;
   loggedin:boolean=false;
 
-  constructor(private userService:UserService,private httpclien:HttpClient,private formbuilder: FormBuilder){}
+  constructor(private userService:UserService,private httpclien:HttpClient,private formbuilder: FormBuilder, private router:Router,private authService: AuthService,
+  ){}
   
   ngOnInit(): void {
     this.userService.GetBooks().subscribe(data => {
@@ -53,6 +57,8 @@ export class MainPageComponent implements OnInit {
       email:['',Validators.required],
       password:['',Validators.required]    
     });
+    this.loggedin = !!localStorage.getItem('Token');
+
   }
    openPopup(type: 'login' | 'register'): void {
     this.popupVisible = true;
@@ -89,12 +95,34 @@ authenticate(): void{
   Object.assign(this.login, this.LoginForm.value)
 
   this.userService.authenticate(this.login).subscribe(res=>{
-    console.log(res.accessToken);
-    localStorage.setItem("Token",res.accessToken);
+    const token = res.accessToken;
+    this.authService.login(token);    
+    localStorage.setItem("Token",token);
+    
+    this.closePopup();
+    this.router.navigate(['/login=true']);
     this.loggedin=true;
+
+    
   })
 }
-  
-  
-
+addToCart(product: any) {
+  if (!this.loggedin) {
+    alert("გთხოვთ, გაიარეთ ავტორიზაცია კალათაში დასამატებლად!");
+    return;
+  }
+  const userId = this.authService.currentUser?.UserID; 
+  if (!userId) {
+    console.error("User ID not available");
+    return;
+  } 
+  const newCartItem = new Cart(
+    undefined,
+    userId,                   
+    product.id,                   
+    this.productValues[product.book_name]
+  );
+  console.log(newCartItem);}
 }
+
+

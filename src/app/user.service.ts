@@ -4,12 +4,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { User } from './model/User';
 import { Login } from './model/Login';
+import { LoginedUser } from './model/LoginedUser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private books: Book[]=[];
+  private user: LoginedUser[]=[];
 
   constructor(private http:HttpClient) { }
   AddUser(user:User):Observable<any>{
@@ -43,6 +45,16 @@ export class UserService {
   set booklist(list :Book[]){
     this.books=list;
   }
+  GetUser(id:number):Observable<LoginedUser[]>{
+    return this.http.get<LoginedUser[]>(`https://localhost:7175/get_user_by_id?id=${id}`)
+  }
+  get logineduser():LoginedUser[]{
+    return this.user;
+  }
+  set logineduser(list :LoginedUser[]){
+    this.user=list;
+  }
+
   
 }
 
