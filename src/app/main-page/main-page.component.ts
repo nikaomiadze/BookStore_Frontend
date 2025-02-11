@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../model/User';
 import { Login } from '../model/Login';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Cart } from '../model/Cart';
 import { AuthService } from '../auth.service';
 
@@ -18,7 +18,7 @@ import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-main-page',
-  imports: [CardModule,CommonModule,InputNumberModule,FormsModule,ButtonModule,ReactiveFormsModule],
+  imports: [CardModule,CommonModule,InputNumberModule,FormsModule,ButtonModule,ReactiveFormsModule,RouterModule],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
@@ -34,11 +34,16 @@ export class MainPageComponent implements OnInit {
   login: Login = new Login();
   LoginForm!: FormGroup;
   loggedin:boolean=false;
+  cart_product: number=0;
+
+
 
   constructor(private userService:UserService,private httpclien:HttpClient,private formbuilder: FormBuilder, private router:Router,private authService: AuthService,
   ){}
   
   ngOnInit(): void {
+    this.get_cart_quantity();
+
     this.userService.GetBooks().subscribe(data => {
       console.log(data);
       this.products = data;
@@ -58,6 +63,7 @@ export class MainPageComponent implements OnInit {
       password:['',Validators.required]    
     });
     this.loggedin = !!localStorage.getItem('Token');
+    
 
   }
    openPopup(type: 'login' | 'register'): void {
@@ -97,12 +103,11 @@ authenticate(): void{
   this.userService.authenticate(this.login).subscribe(res=>{
     const token = res.accessToken;
     this.authService.login(token);    
-    localStorage.setItem("Token",token);
     
     this.closePopup();
+    this.get_cart_quantity();
     this.router.navigate(['/login=true']);
     this.loggedin=true;
-
     
   })
 }
@@ -122,7 +127,27 @@ addToCart(product: any) {
     product.id,                   
     this.productValues[product.book_name]
   );
-  console.log(newCartItem);}
+  this.userService.AddToCart(newCartItem).subscribe(res=>{
+    console.log(res);
+  })
+  this.get_cart_quantity(); 
+  this.go_in_cart();
+  console.log(newCartItem);
+}
+get_cart_quantity(){
+  const userId = this.authService.userId; 
+
+this.userService.GetCart(userId!).subscribe(res=>{
+  console.log(res);
+  this.cart_product=res.length;
+});
+}
+go_in_cart(){
+  const userId = this.authService.currentUser?.UserID; 
+  this.userService.GetCart(userId);
+  this.router.navigate(["/cart"])
+
+}
 }
 
 

@@ -33,6 +33,16 @@ export class AuthService {
     localStorage.removeItem('Token');
     this.currentUser = null;
   }
+  get userId(): number | null {
+    // If currentUser isn't already set, try decoding the token
+    if (!this.currentUser && this.isAuthenticated()) {
+      const token = localStorage.getItem('Token');
+      if (token) {
+        this.currentUser = jwt_decode.jwtDecode(token);
+      }
+    }
+    return this.currentUser ? this.currentUser.UserID : null;
+  }
 }
 
 

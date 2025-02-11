@@ -5,6 +5,8 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { User } from './model/User';
 import { Login } from './model/Login';
 import { LoginedUser } from './model/LoginedUser';
+import { UserCart } from './model/UserCart';
+import { Cart } from './model/Cart';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +56,18 @@ export class UserService {
   set logineduser(list :LoginedUser[]){
     this.user=list;
   }
+  GetCart(id:number):Observable<UserCart[]>{
+    return this.http.get<UserCart[]>(`https://localhost:7175/Get_user_cart?id=${id}`)
+  }
+  AddToCart(cart:Cart):Observable<any>{
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      responseType: 'text' as 'json' 
+    };
+    return this.http.post<any>("https://localhost:7175/add_in_cart" ,cart,httpOptions);
+
+  }
+  
 
   
 }
