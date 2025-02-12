@@ -29,9 +29,23 @@
                     <td *ngFor="let col of columns">
                         {{ rowData[col.field] }}
                     </td>
+                    <td>
+                        <p-button (onClick)="delete_cart_item(rowData.id)" label="წაშლა" icon="pi pi-trash" styleClass="custom-button-3" />
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
 
+    </div>
+    <div class="buttons">
+        <h1>ჯამი:</h1>
+        <p-inputNumber class="amount" [(ngModel)]="amount" [showButtons]="false" [disabled]="true"></p-inputNumber>
+    <button pButton  [disabled]="true" class="currency-button">
+        &#x20BE; <!-- GEL symbol -->
+    </button>
+    <div class="custom-buttons">
+    <p-button label="შეკვეთა" icon="pi pi-check" styleClass="custom-button-1" />
+    <p-button label="გაუქმება" icon="pi pi-times" styleClass="custom-button-2" />
+    </div>
     </div>
 </div>

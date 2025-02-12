@@ -60,3 +60,71 @@ h1{
     height: 60px;
 
 }
+.buttons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.buttons ::ng-deep .p-inputtext {
+    text-align: center;
+    width: 140px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #BBFFC9;
+    background: #FFF;
+    color: #429FFD;
+    font-family: MarkGEOCAPSBold;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.buttons ::ng-deep .p-button{
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #B3D4FF;
+    color: #2869CA;
+    font-family: "Mark GEO";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.custom-buttons{
+    display: flex;
+    gap: 10px;
+}
+.custom-buttons ::ng-deep .p-button{
+    width: 206px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    color: #FFF;
+    font-family: MarkGEOCAPSBold;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+.custom-buttons ::ng-deep .custom-button-1 {
+    background: var(--primary-color);
+}
+
+.custom-buttons ::ng-deep .custom-button-2 {
+    border-radius: 10px;
+    background: #FF6E6E;
+}
+.table ::ng-deep .custom-button-3{
+    background: #FF6E6E;
+    border: none;
+    &:hover{
+        opacity: 0.8;
+        transform: none;
+    }
+}

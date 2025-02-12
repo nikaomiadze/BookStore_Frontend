@@ -67,6 +67,13 @@ export class UserService {
     return this.http.post<any>("https://localhost:7175/add_in_cart" ,cart,httpOptions);
 
   }
+  DeleteCartItem(id:number):Observable<any>{
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      responseType: 'text' as 'json' 
+    };
+    return this.http.delete<any>(`https://localhost:7175/Delete_cart_item?id=${id}`,httpOptions);
+  }
   
 
   

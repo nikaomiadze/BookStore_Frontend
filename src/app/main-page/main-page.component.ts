@@ -42,8 +42,7 @@ export class MainPageComponent implements OnInit {
   ){}
   
   ngOnInit(): void {
-    this.get_cart_quantity();
-
+    
     this.userService.GetBooks().subscribe(data => {
       console.log(data);
       this.products = data;
@@ -63,7 +62,10 @@ export class MainPageComponent implements OnInit {
       password:['',Validators.required]    
     });
     this.loggedin = !!localStorage.getItem('Token');
-    
+    if(this.loggedin){
+      this.get_cart_quantity();
+
+    }
 
   }
    openPopup(type: 'login' | 'register'): void {
@@ -132,7 +134,6 @@ addToCart(product: any) {
   })
   this.get_cart_quantity(); 
   this.go_in_cart();
-  console.log(newCartItem);
 }
 get_cart_quantity(){
   const userId = this.authService.userId; 
@@ -146,7 +147,11 @@ go_in_cart(){
   const userId = this.authService.currentUser?.UserID; 
   this.userService.GetCart(userId);
   this.router.navigate(["/cart"])
-
+}
+log_out(){
+  localStorage.removeItem('Token');
+  this.loggedin=false;
+  this.router.navigate(["/"]);
 }
 }
 
