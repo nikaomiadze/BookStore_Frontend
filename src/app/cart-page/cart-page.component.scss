@@ -64,6 +64,7 @@ h1{
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin-top: 20px;
 }
 .buttons ::ng-deep .p-inputtext {
     text-align: center;
@@ -124,7 +125,48 @@ h1{
     background: #FF6E6E;
     border: none;
     &:hover{
-        opacity: 0.8;
-        transform: none;
+        transition: none !important;
+        transform: none !important;
+        background: #fa8181;
     }
 }
+.loading {
+    text-align: center;
+    font-size: 18px;
+    color: gray;
+    margin-top: 20px;
+  }
+  
+  .loading .pi {
+    font-size: 30px;
+    color: #666;
+  }
+  .empty-cart{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .empty-cart p{
+    size: 18px;
+    font-size: 40px;
+    color: #87a5d3;
+    font-family: MarkGEOCAPSBold;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+   :host ::ng-deep .pi.pi-shopping-cart::before{
+   font-size: 100px;
+    color: #87a5d3;
+  }
+  .empty-cart ::ng-deep .p-button{
+    color: #FFF;
+    background-color: var(--primary-color);
+    font-size: 20px;
+    &:hover{
+        background-color: var(--hover-color);
+    }
+  }
+
+  

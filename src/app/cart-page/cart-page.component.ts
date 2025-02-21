@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 
 
 
@@ -18,7 +21,7 @@ interface Column {
 }
 @Component({
   selector: 'app-cart-page',
-  imports: [TableModule,CommonModule,ButtonModule,InputNumberModule,FormsModule],
+  imports: [TableModule,CommonModule,ButtonModule,InputNumberModule,FormsModule,RouterModule],
   templateUrl: './cart-page.component.html',
   styleUrl: './cart-page.component.scss'
 })
@@ -27,9 +30,10 @@ export class CartPageComponent {
   products: any[] = [];
   userId: number | null = null;
   amount:number|null=0;
+  loading: boolean = false;
 
 
-  constructor(private userservice:UserService,private authservice:AuthService) {}
+  constructor(private userservice:UserService,private authservice:AuthService,private router:Router) {}
 
   ngOnInit() {
     this.get_cart_item();
@@ -41,23 +45,45 @@ export class CartPageComponent {
 
       ];
   }
-  delete_cart_item(id:number){
-    this.userservice.DeleteCartItem(id).subscribe((res)=>{
-      console.log(res);
-      this.amount=0;
+  delete_cart_item(id: number) {
+    this.loading = true; 
+  
+    this.userservice.DeleteCartItem(id).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.amount = 0;
+        this.loading = false;
+        this.get_cart_item();
+      },
+      error: (error) => {
+        console.error('Error deleting item:', error);
+        this.loading = false;
+      },
+    });
+}
+  
+  get_cart_item() {
+    this.loading = true;
+    this.userId = this.authservice.userId;
+  
+    this.userservice.GetCart(this.userId!).subscribe({
+      next: (data) => {
+        setTimeout(() => {
+          this.products = data;
+          this.amount = this.products.reduce((sum, item) => sum + item.order_price, 0);  
+          this.loading = false; 
+        }, 600);
+      },
+      error: (error) => {
+        console.error('Error fetching cart items:', error);
+        this.loading = false;
+      },
+    });
+  }
+  Add_Order(id:number){
+    this.userservice.AddOrder(id).subscribe(res=>{
+      alert(res);
       this.get_cart_item();
     })
   }
-  get_cart_item(){
-    this.userId=this.authservice.userId;
-    console.log(this.userId);
-    this.userservice.GetCart(this.userId!).subscribe((data) => {
-        this.products = data;
-        let i=0;
-        for (let i = 0; i < this.products.length; i++) {
-          this.amount += this.products[i].order_price;
-      }
-    });
-  }
-
 }
